@@ -1,10 +1,13 @@
+import pygame
+import sys
+
 GREEN = 0  # F
 WHITE = 1  # U
 ORANGE = 2 # L
 YELLOW = 3 # D
 RED = 4    # R
 BLUE = 5   # B
-
+color = [(0,221,0),(255,255,255),(255,170,0),(255,255,0),(255,0,0),(0,0,255)]
 
 class RubikCube:
     def __init__(self, state=None):
@@ -126,3 +129,65 @@ class RubikCube:
             for row in self.cube[face]:
                 print(row)
             print()
+a = RubikCube()
+
+WIDTH = 600
+HEIGHT = 450
+pygame.init()
+screen = pygame.display.set_mode((WIDTH,HEIGHT))
+pygame.display.set_caption("rubik-ai")
+clock = pygame.time.Clock()
+
+while True:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                pygame.quit()
+                sys.exit()
+            if event.key == pygame.K_r:
+                a.rotate_R()
+                print("quay R")
+            if event.key == pygame.K_l:
+                a.rotate_L()
+                print("quay L")
+            if event.key == pygame.K_u:
+                a.rotate_U()
+                print("quay U")
+            if event.key == pygame.K_d:
+                a.rotate_D()
+                print("quay D")
+            if event.key == pygame.K_f:
+                a.rotate_F()
+                print("quay F")
+            if event.key == pygame.K_b:
+                a.rotate_B()
+                print("quay B")
+    screen.fill((100, 100, 100))
+    for face in ["U","L","F","D","R","B"]:
+        j=0
+        for row in a.cube[face]:
+            spacew = 0
+            spaceh = 0
+            if face == "U" or face == "F" or face == "D":
+                spacew = 150
+            if face == "R":
+                spacew = 300
+            if face == "B":
+                spacew = 450
+            if face == "L" or face == "F" or face == "R" or face == "B":
+                spaceh = 150
+            if face == "D":
+                spaceh = 300
+            for i in range(0,3):
+                rect = (spacew+i*50,spaceh+j*50,50,50)
+                pygame.draw.rect(screen, color[row[i]],rect)
+            j+=1
+    for i in range(0, int(WIDTH/50)):
+        pygame.draw.line(screen, (50, 50, 50), (i*50, 0), (i*50, HEIGHT), 2)
+    for j in range(0, int(HEIGHT/50)):
+        pygame.draw.line(screen, (50, 50, 50), (0, j*50), (WIDTH, j*50), 2)
+    pygame.display.flip()
+    clock.tick(30)
