@@ -85,13 +85,11 @@ class RubikCube:
     def rotate_U(self):
         self.rotate_face_cw("U")
 
-        temp = self.get_row("B", 0)
-
-        self.set_row("B", 0, self.get_row("R", 0))
-        self.set_row("R", 0, self.get_row("F", 0))
-        self.set_row("F", 0, self.get_row("L", 0))
+        temp = self.get_row("F", 0)
+        self.set_row("F", 0, self.get_row("R", 0))
+        self.set_row("R", 0, self.get_row("B", 0))
+        self.set_row("B", 0, self.get_row("L", 0))
         self.set_row("L", 0, temp)
-
     def rotate_U_prime(self):
         for _ in range(3):
             self.rotate_U()
@@ -101,10 +99,10 @@ class RubikCube:
 
         temp = self.get_row("F", 2)
 
-        self.set_row("F", 2, self.get_row("R", 2))
-        self.set_row("R", 2, self.get_row("B", 2))
-        self.set_row("B", 2, self.get_row("L", 2))
-        self.set_row("L", 2, temp)
+        self.set_row("F", 2, self.get_row("L", 2))
+        self.set_row("L", 2, self.get_row("B", 2))
+        self.set_row("B", 2, self.get_row("R", 2))
+        self.set_row("R", 2, temp)
     
     def rotate_D_prime(self):
         for _ in range(3):
@@ -137,6 +135,33 @@ class RubikCube:
     def rotate_B_prime(self):    
         for _ in range(3):
             self.rotate_B()
+
+    # ========================
+    # APPLY MOVE
+    # ========================
+
+    def apply_move(self, move):
+        """Áp dụng một move dựa trên tên (R, R', L, L', U, U', D, D', F, F', B, B')"""
+        moves = {
+            "R": self.rotate_R,
+            "R'": self.rotate_R_prime,
+            "L": self.rotate_L,
+            "L'": self.rotate_L_prime,
+            "U": self.rotate_U,
+            "U'": self.rotate_U_prime,
+            "D": self.rotate_D,
+            "D'": self.rotate_D_prime,
+            "F": self.rotate_F,
+            "F'": self.rotate_F_prime,
+            "B": self.rotate_B,
+            "B'": self.rotate_B_prime,
+        }
+
+        if move in moves:
+            moves[move]()   # gọi function tương ứng
+        else:
+            print(f"Move không hợp lệ: {move}")
+
     # ========================
     # DEBUG / PRINT
     # ========================
@@ -148,13 +173,21 @@ class RubikCube:
                 print(row)
             print()
 a = RubikCube()
-
+scramble = input("Nhap scramble: ").split()
 WIDTH = 600
 HEIGHT = 450
 pygame.init()
 screen = pygame.display.set_mode((WIDTH,HEIGHT))
 pygame.display.set_caption("rubik-ai")
 clock = pygame.time.Clock()
+
+for c in scramble:
+    if c in ["R","R'","L","L'","U","U'","D","D'","F","F'","B","B'"]:
+        a.apply_move(c)
+    elif c in ["R2","L2","U2","D2","F2","B2"]:
+        a.apply_move(c[0])
+        a.apply_move(c[0])
+
 
 while True:
     for event in pygame.event.get():
@@ -211,6 +244,7 @@ while True:
             if event.key == pygame.K_p:
                 a = RubikCube()  # Reset về trạng thái solved
                 print("Đã reset về trạng thái solved")
+    
     screen.fill((100, 100, 100))
     for face in ["U","L","F","D","R","B"]:
         j=0
