@@ -78,7 +78,10 @@ class RubikCube:
         self.set_col("B", 2, self.get_col("D", 0)[::-1])
         self.set_col("D", 0, self.get_col("F", 0))
         self.set_col("F", 0, temp)
-
+    
+    def rotate_L_prime(self):
+        for _ in range(3):
+            self.rotate_L()
     def rotate_U(self):
         self.rotate_face_cw("U")
 
@@ -89,6 +92,10 @@ class RubikCube:
         self.set_row("F", 0, self.get_row("L", 0))
         self.set_row("L", 0, temp)
 
+    def rotate_U_prime(self):
+        for _ in range(3):
+            self.rotate_U()
+
     def rotate_D(self):
         self.rotate_face_cw("D")
 
@@ -98,6 +105,10 @@ class RubikCube:
         self.set_row("R", 2, self.get_row("B", 2))
         self.set_row("B", 2, self.get_row("L", 2))
         self.set_row("L", 2, temp)
+    
+    def rotate_D_prime(self):
+        for _ in range(3):
+            self.rotate_D()
 
     def rotate_F(self):
         self.rotate_face_cw("F")
@@ -109,6 +120,10 @@ class RubikCube:
         self.set_row("D", 0, self.get_col("R", 0)[::-1])
         self.set_col("R", 0, temp)
 
+    def rotate_F_prime(self):
+        for _ in range(3):
+            self.rotate_F()
+
     def rotate_B(self):
         self.rotate_face_cw("B")
 
@@ -119,6 +134,9 @@ class RubikCube:
         self.set_row("D", 2, self.get_col("L", 0))
         self.set_col("L", 0, temp[::-1])
 
+    def rotate_B_prime(self):    
+        for _ in range(3):
+            self.rotate_B()
     # ========================
     # DEBUG / PRINT
     # ========================
@@ -144,27 +162,55 @@ while True:
             pygame.quit()
             sys.exit()
         if event.type == pygame.KEYDOWN:
+            mods = pygame.key.get_mods()
             if event.key == pygame.K_ESCAPE:
                 pygame.quit()
                 sys.exit()
             if event.key == pygame.K_r:
-                a.rotate_R()
-                print("quay R")
+                if mods & pygame.KMOD_SHIFT:
+                    a.rotate_R_prime()  # Xoay ngược nếu có Shift
+                    print("Đã xoay R' (Shift + R)")
+                else:
+                    a.rotate_R()        # Xoay xuôi nếu không có Shift
+                    print("Đã xoay R")
             if event.key == pygame.K_l:
-                a.rotate_L()
-                print("quay L")
+                if mods & pygame.KMOD_SHIFT:
+                    a.rotate_L_prime()  # Xoay ngược nếu có Shift
+                    print("Đã xoay L' (Shift + L)")
+                else:
+                    a.rotate_L()        # Xoay xuôi nếu không có Shift
+                    print("Đã xoay L")
             if event.key == pygame.K_u:
-                a.rotate_U()
-                print("quay U")
+                if mods & pygame.KMOD_SHIFT:
+                    a.rotate_U_prime()  # Xoay ngược nếu có Shift
+                    print("Đã xoay U' (Shift + U)")
+                else:
+                    a.rotate_U()        # Xoay xuôi nếu không có Shift
+                    print("Đã xoay U")
             if event.key == pygame.K_d:
-                a.rotate_D()
-                print("quay D")
+                if mods & pygame.KMOD_SHIFT:
+                    a.rotate_D_prime()  # Xoay ngược nếu có Shift
+                    print("Đã xoay D' (Shift + D)")
+                else:
+                    a.rotate_D()        # Xoay xuôi nếu không có Shift
+                    print("Đã xoay D")
             if event.key == pygame.K_f:
-                a.rotate_F()
-                print("quay F")
+                if mods & pygame.KMOD_SHIFT:
+                    a.rotate_F_prime()  # Xoay ngược nếu có Shift
+                    print("Đã xoay F' (Shift + F)")
+                else:
+                    a.rotate_F()        # Xoay xuôi nếu không có Shift
+                    print("Đã xoay F")
             if event.key == pygame.K_b:
-                a.rotate_B()
-                print("quay B")
+                if mods & pygame.KMOD_SHIFT:
+                    a.rotate_B_prime()  # Xoay ngược nếu có Shift
+                    print("Đã xoay B' (Shift + B)")
+                else:
+                    a.rotate_B()        # Xoay xuôi nếu không có Shift
+                    print("Đã xoay B")
+            if event.key == pygame.K_p:
+                a = RubikCube()  # Reset về trạng thái solved
+                print("Đã reset về trạng thái solved")
     screen.fill((100, 100, 100))
     for face in ["U","L","F","D","R","B"]:
         j=0
