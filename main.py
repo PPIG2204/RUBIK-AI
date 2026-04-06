@@ -188,86 +188,86 @@ for c in scramble:
         a.apply_move(c[0])
         a.apply_move(c[0])
 
-
-while True:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit()
-        if event.type == pygame.KEYDOWN:
-            mods = pygame.key.get_mods()
-            if event.key == pygame.K_ESCAPE:
+if __name__ == "__main__":
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            if event.key == pygame.K_r:
-                if mods & pygame.KMOD_SHIFT:
-                    a.rotate_R_prime()  # Xoay ngược nếu có Shift
-                    print("Đã xoay R' (Shift + R)")
-                else:
-                    a.rotate_R()        # Xoay xuôi nếu không có Shift
-                    print("Đã xoay R")
-            if event.key == pygame.K_l:
-                if mods & pygame.KMOD_SHIFT:
-                    a.rotate_L_prime()  # Xoay ngược nếu có Shift
-                    print("Đã xoay L' (Shift + L)")
-                else:
-                    a.rotate_L()        # Xoay xuôi nếu không có Shift
-                    print("Đã xoay L")
-            if event.key == pygame.K_u:
-                if mods & pygame.KMOD_SHIFT:
-                    a.rotate_U_prime()  # Xoay ngược nếu có Shift
-                    print("Đã xoay U' (Shift + U)")
-                else:
-                    a.rotate_U()        # Xoay xuôi nếu không có Shift
-                    print("Đã xoay U")
-            if event.key == pygame.K_d:
-                if mods & pygame.KMOD_SHIFT:
-                    a.rotate_D_prime()  # Xoay ngược nếu có Shift
-                    print("Đã xoay D' (Shift + D)")
-                else:
-                    a.rotate_D()        # Xoay xuôi nếu không có Shift
-                    print("Đã xoay D")
-            if event.key == pygame.K_f:
-                if mods & pygame.KMOD_SHIFT:
-                    a.rotate_F_prime()  # Xoay ngược nếu có Shift
-                    print("Đã xoay F' (Shift + F)")
-                else:
-                    a.rotate_F()        # Xoay xuôi nếu không có Shift
-                    print("Đã xoay F")
-            if event.key == pygame.K_b:
-                if mods & pygame.KMOD_SHIFT:
-                    a.rotate_B_prime()  # Xoay ngược nếu có Shift
-                    print("Đã xoay B' (Shift + B)")
-                else:
-                    a.rotate_B()        # Xoay xuôi nếu không có Shift
-                    print("Đã xoay B")
-            if event.key == pygame.K_p:
-                a = RubikCube()  # Reset về trạng thái solved
-                print("Đã reset về trạng thái solved")
-    
-    screen.fill((100, 100, 100))
-    for face in ["U","L","F","D","R","B"]:
-        j=0
-        for row in a.cube[face]:
-            spacew = 0
-            spaceh = 0
-            if face == "U" or face == "F" or face == "D":
-                spacew = 150
-            if face == "R":
-                spacew = 300
-            if face == "B":
-                spacew = 450
-            if face == "L" or face == "F" or face == "R" or face == "B":
-                spaceh = 150
-            if face == "D":
-                spaceh = 300
-            for i in range(0,3):
-                rect = (spacew+i*50,spaceh+j*50,50,50)
-                pygame.draw.rect(screen, color[row[i]],rect)
-            j+=1
-    for i in range(0, int(WIDTH/50)):
-        pygame.draw.line(screen, (50, 50, 50), (i*50, 0), (i*50, HEIGHT), 2)
-    for j in range(0, int(HEIGHT/50)):
-        pygame.draw.line(screen, (50, 50, 50), (0, j*50), (WIDTH, j*50), 2)
-    pygame.display.flip()
-    clock.tick(30)
+            if event.type == pygame.KEYDOWN:
+                mods = pygame.key.get_mods()
+                if event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                    sys.exit()
+                if event.key == pygame.K_r:
+                    if mods & pygame.KMOD_SHIFT:
+                        a.rotate_R_prime()  # Xoay ngược nếu có Shift
+                        print("Đã xoay R' (Shift + R)")
+                    else:
+                        a.rotate_R()        # Xoay xuôi nếu không có Shift
+                        print("Đã xoay R")
+                if event.key == pygame.K_l:
+                    if mods & pygame.KMOD_SHIFT:
+                        a.rotate_L_prime()  # Xoay ngược nếu có Shift
+                        print("Đã xoay L' (Shift + L)")
+                    else:
+                        a.rotate_L()        # Xoay xuôi nếu không có Shift
+                        print("Đã xoay L")
+                if event.key == pygame.K_u:
+                    if mods & pygame.KMOD_SHIFT:
+                        a.rotate_U_prime()  # Xoay ngược nếu có Shift
+                        print("Đã xoay U' (Shift + U)")
+                    else:
+                        a.rotate_U()        # Xoay xuôi nếu không có Shift
+                        print("Đã xoay U")
+                if event.key == pygame.K_d:
+                    if mods & pygame.KMOD_SHIFT:
+                        a.rotate_D_prime()  # Xoay ngược nếu có Shift
+                        print("Đã xoay D' (Shift + D)")
+                    else:
+                        a.rotate_D()        # Xoay xuôi nếu không có Shift
+                        print("Đã xoay D")
+                if event.key == pygame.K_f:
+                    if mods & pygame.KMOD_SHIFT:
+                        a.rotate_F_prime()  # Xoay ngược nếu có Shift
+                        print("Đã xoay F' (Shift + F)")
+                    else:
+                        a.rotate_F()        # Xoay xuôi nếu không có Shift
+                        print("Đã xoay F")
+                if event.key == pygame.K_b:
+                    if mods & pygame.KMOD_SHIFT:
+                        a.rotate_B_prime()  # Xoay ngược nếu có Shift
+                        print("Đã xoay B' (Shift + B)")
+                    else:
+                        a.rotate_B()        # Xoay xuôi nếu không có Shift
+                        print("Đã xoay B")
+                if event.key == pygame.K_p:
+                    a = RubikCube()  # Reset về trạng thái solved
+                    print("Đã reset về trạng thái solved")
+        
+        screen.fill((100, 100, 100))
+        for face in ["U","L","F","D","R","B"]:
+            j=0
+            for row in a.cube[face]:
+                spacew = 0
+                spaceh = 0
+                if face == "U" or face == "F" or face == "D":
+                    spacew = 150
+                if face == "R":
+                    spacew = 300
+                if face == "B":
+                    spacew = 450
+                if face == "L" or face == "F" or face == "R" or face == "B":
+                    spaceh = 150
+                if face == "D":
+                    spaceh = 300
+                for i in range(0,3):
+                    rect = (spacew+i*50,spaceh+j*50,50,50)
+                    pygame.draw.rect(screen, color[row[i]],rect)
+                j+=1
+        for i in range(0, int(WIDTH/50)):
+            pygame.draw.line(screen, (50, 50, 50), (i*50, 0), (i*50, HEIGHT), 2)
+        for j in range(0, int(HEIGHT/50)):
+            pygame.draw.line(screen, (50, 50, 50), (0, j*50), (WIDTH, j*50), 2)
+        pygame.display.flip()
+        clock.tick(30)
