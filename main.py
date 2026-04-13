@@ -1,6 +1,8 @@
+from numpy import sin
 import pygame
 import sys
-
+import math
+import time
 GREEN = 0  # F
 WHITE = 1  # U
 ORANGE = 2 # L
@@ -172,6 +174,35 @@ class RubikCube:
             for row in self.cube[face]:
                 print(row)
             print()
+
+def rhombus(x,y,idx):
+    global dx,dy
+    if idx == 0:         #trên
+        top_points = [
+            (x,y),       #trung tâm
+            (x-dy,y-dx), #trái
+            (x,y-dx*2),  #trên cùng
+            (x+dy,y-dx)  #phải
+            
+        ]
+        return top_points
+    if idx == 1:         #trái
+        top_points = [
+            (x,y),       #trung tâm
+            (x-dy,y-dx), #trên-trái
+            (x-dy,y+dx), #dưới-trái
+            (x,y+dx*2)   #dưới cùng
+        ]
+        return top_points
+    if idx == 2:         #phải
+        top_points = [
+            (x,y),       #trung tâm
+            (x+dy,y-dx), #trên-phải
+            (x+dy,y+dx), #dưới-phải
+            (x,y+dx*2)   #dưới cùng
+        ]
+        return top_points
+   
 a = RubikCube()
 scramble = input("Nhap scramble: ").split()
 WIDTH = 600
@@ -180,7 +211,12 @@ pygame.init()
 screen = pygame.display.set_mode((WIDTH,HEIGHT))
 pygame.display.set_caption("rubik-ai")
 clock = pygame.time.Clock()
-
+viewpoint = 1
+sizev1 = 75
+dx=sizev1/2
+dy=int(sizev1*pow(3,0.5)/2)
+midx=WIDTH/2
+midy=HEIGHT/2
 for c in scramble:
     if c in ["R","R'","L","L'","U","U'","D","D'","F","F'","B","B'"]:
         a.apply_move(c)
@@ -199,6 +235,8 @@ if __name__ == "__main__":
                 if event.key == pygame.K_ESCAPE:
                     pygame.quit()
                     sys.exit()
+                if event.key == pygame.K_o:
+                    viewpoint = (viewpoint + 1) & 1
                 if event.key == pygame.K_r:
                     if mods & pygame.KMOD_SHIFT:
                         a.rotate_R_prime()  # Xoay ngược nếu có Shift
@@ -244,30 +282,52 @@ if __name__ == "__main__":
                 if event.key == pygame.K_p:
                     a = RubikCube()  # Reset về trạng thái solved
                     print("Đã reset về trạng thái solved")
-        
-        screen.fill((100, 100, 100))
-        for face in ["U","L","F","D","R","B"]:
-            j=0
-            for row in a.cube[face]:
-                spacew = 0
-                spaceh = 0
-                if face == "U" or face == "F" or face == "D":
-                    spacew = 150
-                if face == "R":
-                    spacew = 300
-                if face == "B":
-                    spacew = 450
-                if face == "L" or face == "F" or face == "R" or face == "B":
-                    spaceh = 150
-                if face == "D":
-                    spaceh = 300
-                for i in range(0,3):
-                    rect = (spacew+i*50,spaceh+j*50,50,50)
-                    pygame.draw.rect(screen, color[row[i]],rect)
-                j+=1
-        for i in range(0, int(WIDTH/50)):
-            pygame.draw.line(screen, (50, 50, 50), (i*50, 0), (i*50, HEIGHT), 2)
-        for j in range(0, int(HEIGHT/50)):
-            pygame.draw.line(screen, (50, 50, 50), (0, j*50), (WIDTH, j*50), 2)
+        if viewpoint == 0:
+            screen.fill((100, 100, 100))
+            for face in ["U","L","F","D","R","B"]:
+                j=0
+                for row in a.cube[face]:
+                    spacew = 0
+                    spaceh = 0
+                    if face == "U" or face == "F" or face == "D":
+                        spacew = 150
+                    if face == "R":
+                        spacew = 300
+                    if face == "B":
+                        spacew = 450
+                    if face == "L" or face == "F" or face == "R" or face == "B":
+                        spaceh = 150
+                    if face == "D":
+                        spaceh = 300
+                    for i in range(0,3):
+                        rect = (spacew+i*50,spaceh+j*50,50,50)
+                        pygame.draw.rect(screen, color[row[i]],rect)
+                    j+=1
+            for i in range(0, int(WIDTH/50)):
+                pygame.draw.line(screen, (50, 50, 50), (i*50, 0), (i*50, HEIGHT), 2)
+            for j in range(0, int(HEIGHT/50)):
+                pygame.draw.line(screen, (50, 50, 50), (0, j*50), (WIDTH, j*50), 2)
+        else:
+            screen.fill((100,100,100))
+            for i in range (0,3):
+                for j in range(0,3):
+                    rx = midx - (2-i)*dy + j*dy
+                    ry = midy - (2-i)*dx - j*dx
+                    pygame.draw.polygon(screen,color[a.cube["U"][2-j][i]],rhombus(rx,ry,0))
+                    pygame.draw.polygon(screen,(0,0,0),rhombus(rx,ry,0),2)
+            for i in range (0,3):
+                for j in range(0,3):
+                    rx = midx - (2-j)*dy
+                    ry = midy + i*2*dx +j*dx -2*dx 
+                    pygame.draw.polygon(screen,color[a.cube["F"][i][j]],rhombus(rx,ry,1))
+                    pygame.draw.polygon(screen,(0,0,0),rhombus(rx,ry,1),2)
+            for i in range (0,3):
+                for j in range(0,3):
+                    rx = midx + j*dy
+                    ry = midy + i*2*dx - j*dx 
+                    pygame.draw.polygon(screen,color[a.cube["R"][i][j]],rhombus(rx,ry,2))
+                    pygame.draw.polygon(screen,(0,0,0),rhombus(rx,ry,2),2)
+            
+            
         pygame.display.flip()
         clock.tick(30)
