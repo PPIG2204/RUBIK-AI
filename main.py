@@ -139,9 +139,80 @@ class RubikCube:
             self.rotate_B()
 
     # ========================
-    # APPLY MOVE
+    # WHOLE CUBE ROTATIONS
     # ========================
 
+    def rotate_whole_y(self):
+        """Xoay toàn bộ khối sang phải (Mặt Trái L chuyển thành mặt Trước F)"""
+        temp = self.cube["F"]
+        self.cube["F"] = self.cube["L"]
+        self.cube["L"] = self.cube["B"]
+        self.cube["B"] = self.cube["R"]
+        self.cube["R"] = temp
+        
+        # Khi xoay khối dọc theo trục Y, mặt U và D cũng phải tự xoay để khớp viền
+        self.rotate_face_ccw("U")
+        self.rotate_face_cw("D")
+
+    def rotate_whole_y_prime(self):
+        """Xoay toàn bộ khối sang trái (Mặt Phải R chuyển thành mặt Trước F)"""
+        temp = self.cube["F"]
+        self.cube["F"] = self.cube["R"]
+        self.cube["R"] = self.cube["B"]
+        self.cube["B"] = self.cube["L"]
+        self.cube["L"] = temp
+        
+        self.rotate_face_cw("U")
+        self.rotate_face_ccw("D")
+
+    def rotate_whole_x(self):
+        """Xoay toàn bộ khối lên trên (Mặt Dưới D chuyển thành mặt Trước F)"""
+        temp_F = self.cube["F"]
+        temp_U = self.cube["U"]
+        temp_B = self.cube["B"]
+        temp_D = self.cube["D"]
+
+        self.cube["F"] = temp_D
+        self.cube["U"] = temp_F
+        
+        # Khi vòng qua đỉnh/đáy, mặt B và D bị lật ngược 180 độ
+        self.cube["B"] = [list(row) for row in temp_U]
+        self.rotate_face_cw("B")
+        self.rotate_face_cw("B")
+        
+        self.cube["D"] = [list(row) for row in temp_B]
+        self.rotate_face_cw("D")
+        self.rotate_face_cw("D")
+
+        # Mặt R và L chỉ xoay tại chỗ
+        self.rotate_face_cw("R")
+        self.rotate_face_ccw("L")
+
+    def rotate_whole_x_prime(self):
+        """Xoay toàn bộ khối xuống dưới (Mặt Trên U chuyển thành mặt Trước F)"""
+        temp_F = self.cube["F"]
+        temp_U = self.cube["U"]
+        temp_B = self.cube["B"]
+        temp_D = self.cube["D"]
+
+        self.cube["F"] = temp_U
+        self.cube["D"] = temp_F
+
+        self.cube["U"] = [list(row) for row in temp_B]
+        self.rotate_face_cw("U")
+        self.rotate_face_cw("U")
+
+        self.cube["B"] = [list(row) for row in temp_D]
+        self.rotate_face_cw("B")
+        self.rotate_face_cw("B")
+
+        self.rotate_face_ccw("R")
+        self.rotate_face_cw("L")
+
+    # ========================
+    # APPLY MOVE
+    # ========================
+    
     def apply_move(self, move):
         """Áp dụng một move dựa trên tên (R, R', L, L', U, U', D, D', F, F', B, B')"""
         moves = {
@@ -282,6 +353,20 @@ if __name__ == "__main__":
                 if event.key == pygame.K_p:
                     a = RubikCube()  # Reset về trạng thái solved
                     print("Đã reset về trạng thái solved")
+                
+                # BỔ SUNG PHÍM MŨI TÊN Ở ĐÂY
+                if event.key == pygame.K_RIGHT:
+                    a.rotate_whole_y()
+                    print("Xoay toàn bộ khối sang phải")
+                if event.key == pygame.K_LEFT:
+                    a.rotate_whole_y_prime()
+                    print("Xoay toàn bộ khối sang trái")
+                if event.key == pygame.K_UP:
+                    a.rotate_whole_x()
+                    print("Xoay toàn bộ khối lên trên")
+                if event.key == pygame.K_DOWN:
+                    a.rotate_whole_x_prime()
+                    print("Xoay toàn bộ khối xuống dưới")
         if viewpoint == 0:
             screen.fill((100, 100, 100))
             for face in ["U","L","F","D","R","B"]:
