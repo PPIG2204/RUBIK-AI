@@ -274,28 +274,35 @@ def rhombus(x,y,idx):
         ]
         return top_points
    
-a = RubikCube()
-scramble = input("Nhap scramble: ").split()
+   
+
 WIDTH = 600
 HEIGHT = 450
-pygame.init()
-screen = pygame.display.set_mode((WIDTH,HEIGHT))
-pygame.display.set_caption("rubik-ai")
-clock = pygame.time.Clock()
+# pygame.init()
+# screen = pygame.display.set_mode((WIDTH,HEIGHT))
+# pygame.display.set_caption("rubik-ai")
+# clock = pygame.time.Clock()
 viewpoint = 1
 sizev1 = 75
 dx=sizev1/2
 dy=int(sizev1*pow(3,0.5)/2)
 midx=WIDTH/2
 midy=HEIGHT/2
-for c in scramble:
-    if c in ["R","R'","L","L'","U","U'","D","D'","F","F'","B","B'"]:
-        a.apply_move(c)
-    elif c in ["R2","L2","U2","D2","F2","B2"]:
-        a.apply_move(c[0])
-        a.apply_move(c[0])
+
+def use_scramble(a, scramble):
+    for c in scramble:
+        if c in ["R","R'","L","L'","U","U'","D","D'","F","F'","B","B'"]:
+            a.apply_move(c)
+        elif c in ["R2","L2","U2","D2","F2","B2"]:
+            a.apply_move(c[0])
+            a.apply_move(c[0])
+
+
 
 if __name__ == "__main__":
+    a = RubikCube()
+    scramble = input("Nhap scramble: ").split()
+    use_scramble(a, scramble)
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
