@@ -1,6 +1,6 @@
 import main
 import heapq
-
+import time
 
 
 def heuristic(state):
@@ -120,7 +120,7 @@ def astar(start_state):
         step += 1
 
         # Goal check
-        if is_goal(current.state):
+        if current.h == 0:      #is_goal(current.state):
             return reconstruct_path(current)
 
         # state_key = tuple(current.state) # This was wrong
@@ -146,25 +146,17 @@ def astar(start_state):
 
     return None
 
-a = main.RubikCube()
-sc = input("Nhap scramble: ").split()   
-main.use_scramble(a, sc)
-astar_solution = astar(a.cube)
-print("A* solution:", astar_solution)
-print("Number of steps:", step)
-
 
 if __name__ == "__main__":
-    # Test with a simple scramble
-    initial_cube = main.RubikCube()
-    initial_cube.rotate_R()
-    initial_cube.rotate_U()
     
-    print("Starting A* search...")
-    solution = astar(initial_cube.cube)
-    print("Solution found:", solution)
-
-    cube = main.RubikCube()
-    print("Is solved cube goal?", is_goal(cube.cube))
-    cube.rotate_R()
-    print("Is cube after R move goal?", is_goal(cube.cube))
+    start_time = time.perf_counter()
+    a = main.RubikCube()
+    sc = input("Nhap scramble: ").split()   
+    main.use_scramble(a, sc)
+    astar_solution = astar(a.cube)
+    print("A* solution:", astar_solution)
+    print("Number of steps:", step)
+    end_time = time.perf_counter()
+    execution_time = end_time - start_time
+    print(f"Thời gian chạy: {execution_time:.6f} giây")
+        
