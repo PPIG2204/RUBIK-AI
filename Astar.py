@@ -2,42 +2,101 @@ import main
 import heapq
 import time
 
-
+CORNERS = [
+    # Tên: vị trí trên cube
+    [("U", 0, 0), ("L", 0, 0), ("B", 0, 2)],  # ULB
+    [("U", 0, 2), ("B", 0, 0), ("R", 0, 2)],  # UBR
+    [("U", 2, 0), ("F", 0, 0), ("L", 0, 2)],  # UFL
+    [("U", 2, 2), ("R", 0, 0), ("F", 0, 2)],  # URF
+    [("D", 0, 0), ("F", 2, 0), ("L", 2, 2)],  # DFL
+    [("D", 0, 2), ("R", 2, 0), ("F", 2, 2)],  # DRF
+    [("D", 2, 0), ("L", 2, 0), ("B", 2, 2)],  # DLB
+    [("D", 2, 2), ("B", 2, 0), ("R", 2, 2)],  # DBR
+]
+ 
+# ============================================
+# ĐỊNH NGHĨA 12 EDGE PIECES
+# Mỗi edge là list 2 tuple (face, row, col)
+# ============================================
+EDGES = [
+    [("U", 0, 1), ("B", 0, 1)],  # UB
+    [("U", 1, 0), ("L", 0, 1)],  # UL
+    [("U", 1, 2), ("R", 0, 1)],  # UR
+    [("U", 2, 1), ("F", 0, 1)],  # UF
+    [("D", 0, 1), ("F", 2, 1)],  # DF
+    [("D", 1, 0), ("L", 2, 1)],  # DL
+    [("D", 1, 2), ("R", 2, 1)],  # DR
+    [("D", 2, 1), ("B", 2, 1)],  # DB
+    [("F", 1, 0), ("L", 1, 2)],  # FL
+    [("F", 1, 2), ("R", 1, 0)],  # FR
+    [("B", 1, 0), ("R", 1, 2)],  # BR
+    [("B", 1, 2), ("L", 1, 0)],  # BL
+]
+# ============================================
+# SOLVED STATE - Trạng thái hoàn chỉnh của cube
+# Màu sắc: F=0(GREEN), U=1(WHITE), L=2(ORANGE), D=3(YELLOW), R=4(RED), B=5(BLUE)
+# ============================================
+SOLVED_STATE = {
+    "F": [[0]*3 for _ in range(3)],  # GREEN
+    "U": [[1]*3 for _ in range(3)],  # WHITE
+    "L": [[2]*3 for _ in range(3)],  # ORANGE
+    "D": [[3]*3 for _ in range(3)],  # YELLOW
+    "R": [[4]*3 for _ in range(3)],  # RED
+    "B": [[5]*3 for _ in range(3)],  # BLUE
+}
 def heuristic(state):
     """
     Improved heuristic: max(misplaced_corners, misplaced_edges)
-    - Corners at positions [0,0], [0,2], [2,0], [2,2] on each face
-    - Edges at positions [0,1], [1,0], [1,2], [2,1] on each face
-    Mapping:
-      - Each corner piece touches 3 faces (8 corners total)
-      - Each edge piece touches 2 faces (12 edges total)
-    Returns: max count to get better bound
+    
+    Args:
+        state: dict với keys "F", "U", "L", "D", "R", "B"
+               mỗi value là list 3x3 chứa số từ 0-5 (màu)
+    
+    Returns:
+        max(corners_wrong, edges_wrong) - lower bound cho số move còn lại
     """
-    misplaced_corners = 0
-    misplaced_edges = 0
     
-    for face in state.values():
-        center_color = face[1][1]  # center color of the face
+    corners_wrong = 0
+    edges_wrong = 0
+    
+    # ============================================
+    # ĐẾM CORNER SẢI VỊ TRÍ
+    # ============================================
+    for corner_positions in CORNERS:
+        # Lấy tập màu của corner hiện tại
+        current_colors = set()
+        for face, row, col in corner_positions:
+            current_colors.add(state[face][row][col])
         
-        # Check corners: [0,0], [0,2], [2,0], [2,2]
-        corners = [(0, 0), (0, 2), (2, 0), (2, 2)]
-        for r, c in corners:
-            if face[r][c] != center_color:
-                misplaced_corners += 1
+        # Lấy tập màu của corner trong trạng thái solved
+        solved_colors = set()
+        for face, row, col in corner_positions:
+            solved_colors.add(SOLVED_STATE[face][row][col])
         
-        # Check edges: [0,1], [1,0], [1,2], [2,1]
-        edges = [(0, 1), (1, 0), (1, 2), (2, 1)]
-        for r, c in edges:
-            if face[r][c] != center_color:
-                misplaced_edges += 1
+        # Nếu tập màu không khớp → corner sai vị trí
+        if current_colors != solved_colors:
+            corners_wrong += 1
     
-    # Each corner piece touches 3 faces, so divide by 3
-    # Each edge piece touches 2 faces, so divide by 2
-    corners_count = misplaced_corners // 3
-    edges_count = misplaced_edges // 2
+    # ============================================
+    # ĐẾM EDGE SẢI VỊ TRÍ
+    # ============================================
+    for edge_positions in EDGES:
+        # Lấy tập màu của edge hiện tại
+        current_colors = set()
+        for face, row, col in edge_positions:
+            current_colors.add(state[face][row][col])
+        
+        # Lấy tập màu của edge trong trạng thái solved
+        solved_colors = set()
+        for face, row, col in edge_positions:
+            solved_colors.add(SOLVED_STATE[face][row][col])
+        
+        # Nếu tập màu không khớp → edge sai vị trí
+        if current_colors != solved_colors:
+            edges_wrong += 1
     
-    # Return max for better A* bound
-    return max(corners_count, edges_count)
+    # Trả về max để được lower bound tốt hơn
+    return max(corners_wrong, edges_wrong)
 
 def is_goal(state):
     for face in state.values():

@@ -11,6 +11,8 @@ RED = 4    # R
 BLUE = 5   # B
 color = [(0,221,0),(255,255,255),(255,170,0),(255,255,0),(255,0,0),(0,0,255)]
 
+
+
 class RubikCube:
     def __init__(self, state=None):
         self.cube = state if state else self._init_solved()
