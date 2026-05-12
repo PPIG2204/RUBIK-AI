@@ -278,10 +278,10 @@ def rhombus(x,y,idx):
 
 WIDTH = 600
 HEIGHT = 450
-# pygame.init()
-# screen = pygame.display.set_mode((WIDTH,HEIGHT))
-# pygame.display.set_caption("rubik-ai")
-# clock = pygame.time.Clock()
+pygame.init()
+screen = pygame.display.set_mode((WIDTH,HEIGHT))
+pygame.display.set_caption("rubik-ai")
+clock = pygame.time.Clock()
 viewpoint = 1
 sizev1 = 75
 dx=sizev1/2
