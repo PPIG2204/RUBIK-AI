@@ -7,20 +7,30 @@ def generate_random_scramble(depth):
     """Generate random scramble sequence of given depth"""
     moves = ["R", "R'", "L", "L'", "U", "U'", "D", "D'", "F", "F'", "B", "B'"]
     scramble = []
-    
+    i = 1
     for _ in range(depth):
         # Avoid consecutive same face rotations for realistic scrambles
         move = random.choice(moves)
         if scramble:
-            while Astar.get_face_from_move(move) == Astar.get_face_from_move(scramble[-1]):
-                move = random.choice(moves)
+            if i == 1:
+                a = random.randint(1,4)
+                if a > 1:
+                    move=scramble[-1]
+                    i=2
+                else:
+                    while Astar.get_face_from_move(move) == Astar.get_face_from_move(scramble[-1]):
+                        move = random.choice(moves)
+            else:
+                while Astar.get_face_from_move(move) == Astar.get_face_from_move(scramble[-1]):
+                    move = random.choice(moves)
+                i=1
         scramble.append(move)
     
     return scramble
 
 def stress_test():
     """Run stress tests with different scramble depths"""
-    depths = [5, 6, 7]
+    depths = [5,6,7]
     num_tests_per_depth = 3  # Test each depth 3 times
     
     print("=" * 80)
