@@ -9,7 +9,14 @@ ORANGE = 2 # L
 YELLOW = 3 # D
 RED = 4    # R
 BLUE = 5   # B
-color = [(0,221,0),(255,255,255),(255,170,0),(255,255,0),(255,0,0),(0,0,255)]
+color = [
+    (0,221,0),
+    (255,255,255),
+    (255,170,0),
+    (255,255,0),
+    (255,0,0),
+    (0,0,255)
+]
 
 
 
@@ -249,7 +256,6 @@ class RubikCube:
             print()
 
 def rhombus(x,y,idx):
-    global dx,dy
     if idx == 0:         #trên
         top_points = [
             (x,y),       #trung tâm
@@ -301,12 +307,12 @@ def use_scramble(a, scramble):
 
 
 if __name__ == "__main__":
-    pygame.init()
-    screen = pygame.display.set_mode((WIDTH,HEIGHT))
-    pygame.display.set_caption("rubik-ai")    
     a = RubikCube()
     scramble = input("Nhap scramble: ").split()
     use_scramble(a, scramble)
+    pygame.init()
+    screen = pygame.display.set_mode((WIDTH,HEIGHT))
+    pygame.display.set_caption("rubik-ai")    
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -427,3 +433,4 @@ if __name__ == "__main__":
             
         pygame.display.flip()
         clock.tick(30)
+        
