@@ -293,7 +293,6 @@ if __name__ == "__main__":
     a = main.RubikCube()
     sc = input("Nhap scramble: ").split()   
     main.use_scramble(a, sc)
-    
     result = astar(a.cube)
     if result:
         astar_solution, nodes_expanded, elapsed_time = result
